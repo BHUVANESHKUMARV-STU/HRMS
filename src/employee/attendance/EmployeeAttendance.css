@@ -1,0 +1,195 @@
+.attendance-wrapper {
+  padding: 30px;
+  background: #f4f6fa;
+  min-height: 100%;
+}
+
+/* HEADER */
+.attendance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.shift-info {
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 5px;
+}
+
+.regularize-btn {
+  padding: 10px 18px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.regularize-btn:hover {
+  background: #1d4ed8;
+}
+
+/* SUMMARY */
+.attendance-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.summary-card {
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+}
+
+.summary-card p {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.summary-card h3 {
+  font-size: 22px;
+  margin-top: 8px;
+  color: #1e293b;
+}
+
+/* CARD */
+.attendance-card {
+  background: white;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+  margin-bottom: 25px;
+}
+
+/* TABLE */
+.table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: #f1f5f9;
+}
+
+th, td {
+  padding: 12px;
+  font-size: 14px;
+}
+
+td {
+  border-bottom: 1px solid #e2e8f0;
+}
+
+tr:hover {
+  background: #f8fafc;
+}
+
+/* STATUS */
+.status {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status.present {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status.late {
+  background: #fef9c3;
+  color: #854d0e;
+}
+
+.status.absent {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.status.holiday {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+/* REPORTS */
+.report-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.report-card {
+  padding: 18px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.report-card:hover {
+  background: #2563eb;
+  color: white;
+}
+
+/* MODAL */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal {
+  background: white;
+  padding: 25px;
+  border-radius: 16px;
+  width: 400px;
+}
+
+.modal textarea {
+  width: 100%;
+  height: 80px;
+  margin-top: 10px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+}
+
+.modal-actions {
+  margin-top: 15px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.save-btn {
+  padding: 8px 16px;
+  background: #16a34a;
+  border: none;
+  border-radius: 6px;
+  color: white;
+}
+
+.cancel-btn {
+  padding: 8px 16px;
+  background: #dc2626;
+  border: none;
+  border-radius: 6px;
+  color: white;
+}

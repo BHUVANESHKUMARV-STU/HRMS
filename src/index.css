@@ -1,0 +1,23 @@
+/* ===== GLOBAL RESET ===== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===== HTML & BODY ===== */
+html,
+body {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;          /* 🔒 BODY CANNOT SCROLL */
+  background: #f4f7fb;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+}
+
+/* ===== REACT ROOT ===== */
+#root {
+  height: 100%;
+}
