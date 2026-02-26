@@ -1,175 +1,182 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import "./EmployeeAttendance.css";
 
 const EmployeeAttendance = () => {
-  const [showRegularize, setShowRegularize] = useState(false);
-
-  const shiftTime = "09:00 AM - 06:00 PM";
-  const lateAfter = "09:15 AM";
-  const weeklyOff = "Sunday";
-
+  /* =========================
+     EMPLOYEE ATTENDANCE DATA
+  ========================= */
   const [attendanceData] = useState([
     {
-      date: "01 Feb 2026",
-      shift: "General",
-      biometric: "Face",
-      checkIn: "09:02 AM",
-      checkOut: "06:01 PM",
+      date: "2024-02-01",
+      checkIn: "09:05 AM",
+      checkOut: "06:00 PM",
       status: "Present",
-      workHours: "8h 59m",
-      overtime: "0h",
+      workHours: "8h 55m",
+      overtime: "0h 0m",
+      notes: "-",
     },
     {
-      date: "02 Feb 2026",
-      shift: "General",
-      biometric: "RFID",
-      checkIn: "09:30 AM",
-      checkOut: "06:05 PM",
+      date: "2024-02-02",
+      checkIn: "09:35 AM",
+      checkOut: "06:10 PM",
       status: "Late",
       workHours: "8h 35m",
-      overtime: "0h",
-    },
-    {
-      date: "03 Feb 2026",
-      shift: "-",
-      biometric: "-",
-      checkIn: "-",
-      checkOut: "-",
-      status: "Absent",
-      workHours: "-",
-      overtime: "-",
-    },
-    {
-      date: "04 Feb 2026",
-      shift: "Holiday",
-      biometric: "-",
-      checkIn: "-",
-      checkOut: "-",
-      status: "Holiday",
-      workHours: "-",
-      overtime: "-",
+      overtime: "0h 10m",
+      notes: "Traffic",
     },
   ]);
 
+  /* =========================
+     FILTER STATE
+  ========================= */
+  const [searchDate, setSearchDate] = useState("");
+  const [searchStatus, setSearchStatus] = useState("");
+
+  const ITEMS_PER_PAGE = 10;
+  const [currentPage, setCurrentPage] = useState(1);
+
+  /* =========================
+     FORMAT DATE
+  ========================= */
+  const formatDate = (dateString) => {
+    const options = { day: "2-digit", month: "short", year: "numeric" };
+    return new Date(dateString).toLocaleDateString("en-GB", options);
+  };
+
+  /* =========================
+     FILTER LOGIC
+  ========================= */
+  const filteredAttendance = useMemo(() => {
+    return attendanceData.filter(
+      (item) =>
+        item.date.includes(searchDate) &&
+        item.status.toLowerCase().includes(searchStatus.toLowerCase()),
+    );
+  }, [attendanceData, searchDate, searchStatus]);
+
+  const totalPages = Math.ceil(filteredAttendance.length / ITEMS_PER_PAGE);
+
+  const paginatedAttendance = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredAttendance.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredAttendance, currentPage]);
+
+  /* =========================
+     CALCULATED STATS
+  ========================= */
+  const totalPresent = attendanceData.filter(
+    (a) => a.status === "Present",
+  ).length;
+  const totalLate = attendanceData.filter((a) => a.status === "Late").length;
+  const totalAbsent = attendanceData.filter(
+    (a) => a.status === "Absent",
+  ).length;
+
   return (
-    <div className="attendance-wrapper">
+    <div className="attendance-page">
       {/* HEADER */}
       <div className="attendance-header">
         <div>
           <h2>My Attendance</h2>
-          <p className="shift-info">
-            Shift: {shiftTime} | Late After: {lateAfter} | Weekly Off:{" "}
-            {weeklyOff}
-          </p>
-        </div>
-        <button
-          className="regularize-btn"
-          onClick={() => setShowRegularize(true)}
-        >
-          Request Regularization
-        </button>
-      </div>
-
-      {/* SUMMARY */}
-      <div className="attendance-summary">
-        <div className="summary-card">
-          <p>Present</p>
-          <h3>18</h3>
-        </div>
-
-        <div className="summary-card">
-          <p>Late Marks</p>
-          <h3>3</h3>
-        </div>
-
-        <div className="summary-card">
-          <p>Overtime</p>
-          <h3>12h</h3>
-        </div>
-
-        <div className="summary-card">
-          <p>Attendance %</p>
-          <h3>92%</h3>
+          <p>View and track your attendance records</p>
         </div>
       </div>
 
-      {/* ATTENDANCE TABLE */}
-      <div className="attendance-card">
-        <h3>Daily Attendance Log</h3>
+     
 
-        <div className="table-wrapper">
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Shift</th>
-                <th>Biometric</th>
-                <th>Check-In</th>
-                <th>Check-Out</th>
-                <th>Work Hours</th>
-                <th>OT</th>
-                <th>Status</th>
-              </tr>
-            </thead>
+      {/* TABLE CARD */}
+      <div className="table-card">
+        <h3>Attendance Records</h3>
 
-            <tbody>
-              {attendanceData.map((item, index) => (
-                <tr key={index}>
-                  <td>{item.date}</td>
-                  <td>{item.shift}</td>
-                  <td>{item.biometric}</td>
-                  <td>{item.checkIn}</td>
-                  <td>{item.checkOut}</td>
-                  <td>{item.workHours}</td>
-                  <td>{item.overtime}</td>
-                  <td>
-                    <span className={`status ${item.status.toLowerCase()}`}>
-                      {item.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+        {/* FILTER BAR */}
+        <div className="attendance-filter-bar">
+          <div className="attendance-filter-item">
+            <input
+              type="date"
+              value={searchDate}
+              onChange={(e) => {
+                setSearchDate(e.target.value);
+                setCurrentPage(1);
+              }}
+            />
+          </div>
 
-      {/* REPORTS SECTION */}
-      <div className="attendance-card">
-        <h3>Reports</h3>
-
-        <div className="report-grid">
-          <div className="report-card">Daily Attendance Report</div>
-          <div className="report-card">Monthly Summary</div>
-          <div className="report-card">Shift vs Actual Report</div>
-          <div className="report-card">Late Coming Analysis</div>
-        </div>
-      </div>
-
-      {/* REGULARIZATION MODAL */}
-      {showRegularize && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h3>Attendance Regularization Request</h3>
-            <input type="date" />
-            <textarea placeholder="Enter reason..." />
-            <div className="modal-actions">
-              <button
-                className="save-btn"
-                onClick={() => setShowRegularize(false)}
-              >
-                Submit
-              </button>
-              <button
-                className="cancel-btn"
-                onClick={() => setShowRegularize(false)}
-              >
-                Cancel
-              </button>
-            </div>
+          <div className="attendance-filter-item">
+            <select
+              value={searchStatus}
+              onChange={(e) => {
+                setSearchStatus(e.target.value);
+                setCurrentPage(1);
+              }}
+            >
+              <option value="">All Status</option>
+              <option value="Present">Present</option>
+              <option value="Late">Late</option>
+              <option value="Absent">Absent</option>
+            </select>
           </div>
         </div>
-      )}
+
+        {/* TABLE */}
+        <table>
+          <thead>
+            <tr>
+              <th>DATE</th>
+              <th>CHECK IN</th>
+              <th>CHECK OUT</th>
+              <th>WORK HOURS</th>
+              <th>OVERTIME</th>
+              <th>STATUS</th>
+              <th>NOTES</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {paginatedAttendance.map((item, index) => (
+              <tr key={index}>
+                <td>{formatDate(item.date)}</td>
+                <td>{item.checkIn}</td>
+                <td>{item.checkOut}</td>
+                <td>{item.workHours}</td>
+                <td>{item.overtime}</td>
+                <td>
+                  <span className={`badge ${item.status.toLowerCase()}`}>
+                    {item.status}
+                  </span>
+                </td>
+                <td>{item.notes}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {/* PAGINATION */}
+        <div className="attendance-pagination">
+          <button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((p) => p - 1)}
+          >
+            Prev
+          </button>
+
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i}
+              className={currentPage === i + 1 ? "active" : ""}
+              onClick={() => setCurrentPage(i + 1)}
+            >
+              {i + 1}
+            </button>
+          ))}
+
+          <button
+            disabled={currentPage === totalPages || totalPages === 0}
+            onClick={() => setCurrentPage((p) => p + 1)}
+          >
+            Next
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

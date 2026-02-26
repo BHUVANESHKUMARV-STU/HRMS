@@ -1,144 +1,254 @@
-import { useState } from "react";
 import "./EmployeeLeave.css";
+import { useState, useMemo } from "react";
 
 const EmployeeLeave = () => {
-  const [leaves] = useState([
+  const [showApplyModal, setShowApplyModal] = useState(false);
+
+  /* ================= EMPLOYEE LEAVE DATA ================= */
+  const [myLeaves, setMyLeaves] = useState([
     {
       id: 1,
       type: "Casual Leave",
-      from: "18 Feb 2026",
-      to: "19 Feb 2026",
-      days: 2,
+      duration: "15 Jun – 17 Jun",
+      days: 3,
+      reason: "Family function",
       status: "Pending",
     },
     {
       id: 2,
       type: "Sick Leave",
-      from: "10 Feb 2026",
-      to: "10 Feb 2026",
-      days: 1,
+      duration: "20 Jun – 21 Jun",
+      days: 2,
+      reason: "Not feeling well",
       status: "Approved",
-    },
-    {
-      id: 3,
-      type: "Earned Leave",
-      from: "01 Feb 2026",
-      to: "03 Feb 2026",
-      days: 3,
-      status: "Rejected",
     },
   ]);
 
+  /* ================= FILTER STATES ================= */
+  const [filterType, setFilterType] = useState("");
+  const [filterStatus, setFilterStatus] = useState("");
+
+  const filteredLeaves = useMemo(() => {
+    return myLeaves.filter(
+      (item) =>
+        (!filterType || item.type === filterType) &&
+        (!filterStatus || item.status === filterStatus),
+    );
+  }, [myLeaves, filterType, filterStatus]);
+
+  /* ================= PAGINATION ================= */
+  const ITEMS_PER_PAGE = 5;
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const totalPages = Math.ceil(filteredLeaves.length / ITEMS_PER_PAGE);
+
+  const paginatedLeaves = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredLeaves.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredLeaves, currentPage]);
+
+  /* ================= CANCEL LEAVE ================= */
+  const cancelLeave = (id) => {
+    setMyLeaves((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, status: "Cancelled" } : item,
+      ),
+    );
+  };
+
   return (
-    <div className="leave-dashboard">
+    <div className="leave-page">
       {/* HEADER */}
-      <div className="leave-top">
+      <div className="leave-header">
         <div>
-          <h2>Leave Management</h2>
-          <p>Manage leave requests, balances & policies</p>
+          <h2>My Leave Portal</h2>
+          <p>Apply and track your leave requests</p>
         </div>
-        <button className="primary-btn">Apply Leave</button>
+
+        <button className="apply-btn" onClick={() => setShowApplyModal(true)}>
+          + Apply Leave
+        </button>
       </div>
 
-      <div className="leave-layout">
-        {/* LEFT PANEL */}
-        <div className="left-panel">
-          {/* BALANCE */}
-          <div className="card">
-            <h3>Leave Balance</h3>
-            <div className="balance-grid">
-              <div>
-                <span>Casual</span>
-                <strong>8</strong>
-              </div>
-              <div>
-                <span>Sick</span>
-                <strong>6</strong>
-              </div>
-              <div>
-                <span>Earned</span>
-                <strong>12</strong>
-              </div>
-              <div>
-                <span>Comp Off</span>
-                <strong>2</strong>
-              </div>
-            </div>
-          </div>
-
-          {/* POLICY */}
-          <div className="card">
-            <h3>Leave Policy</h3>
-            <ul className="policy-list">
-              <li>Accrual: 1.5 EL / month</li>
-              <li>Carry Forward: Max 30 days</li>
-              <li>Encashment Allowed</li>
-              <li>Sandwich Rule Enabled</li>
-            </ul>
-          </div>
-
-          {/* CALENDAR */}
-          <div className="card">
-            <h3>Calendar - Feb 2026</h3>
-            <div className="calendar">
-              {Array.from({ length: 28 }, (_, i) => (
-                <div
-                  key={i}
-                  className={`day ${i === 17 || i === 18 ? "leave-day" : ""}`}
-                >
-                  {i + 1}
-                </div>
-              ))}
-            </div>
-          </div>
+      {/* LEAVE BALANCE CARDS */}
+      <div className="leave-stats">
+        <div className="leave-card">
+          <p className="card-label">Casual Leave</p>
+          <h2 className="card-value">9</h2>
+          <span className="card-meta">Used: 3 / Total: 12</span>
         </div>
 
-        {/* RIGHT PANEL */}
-        <div className="right-panel">
-          <div className="card">
-            <h3>My Leave Requests</h3>
+        <div className="leave-card">
+          <p className="card-label">Sick Leave</p>
+          <h2 className="card-value">8</h2>
+          <span className="card-meta">Used: 2 / Total: 10</span>
+        </div>
 
-            <table className="leave-table">
-              <thead>
-                <tr>
-                  <th>Type</th>
-                  <th>Duration</th>
-                  <th>Days</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {leaves.map((leave) => (
-                  <tr key={leave.id}>
-                    <td>{leave.type}</td>
-                    <td>
-                      {leave.from} - {leave.to}
-                    </td>
-                    <td>{leave.days}</td>
-                    <td>
-                      <span className={`status ${leave.status.toLowerCase()}`}>
-                        {leave.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* APPROVAL PIPELINE */}
-          <div className="card">
-            <h3>Approval Workflow</h3>
-            <div className="workflow">
-              <div className="wf-step active">Employee</div>
-              <div className="wf-step">Manager</div>
-              <div className="wf-step">HR</div>
-              <div className="wf-step">Balance Update</div>
-            </div>
-          </div>
+        <div className="leave-card">
+          <p className="card-label">Earned Leave</p>
+          <h2 className="card-value">15</h2>
+          <span className="card-meta">Used: 0 / Total: 15</span>
         </div>
       </div>
+
+      {/* TABLE */}
+      <div className="leave-table-card">
+        <h3>My Leave Requests</h3>
+        <p className="sub-text">View your recent and past leave applications</p>
+
+        {/* FILTER BAR */}
+        <div className="leave-filter-bar">
+          <select
+            value={filterType}
+            onChange={(e) => setFilterType(e.target.value)}
+          >
+            <option value="">All Leave Types</option>
+            <option>Casual Leave</option>
+            <option>Sick Leave</option>
+            <option>Earned Leave</option>
+          </select>
+
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+          >
+            <option value="">All Status</option>
+            <option>Approved</option>
+            <option>Rejected</option>
+            <option>Pending</option>
+            <option>Cancelled</option>
+          </select>
+        </div>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Leave Type</th>
+              <th>Duration</th>
+              <th>Days</th>
+              <th>Reason</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {paginatedLeaves.map((req) => (
+              <tr key={req.id}>
+                <td>{req.type}</td>
+                <td>{req.duration}</td>
+                <td>{req.days}</td>
+                <td>{req.reason}</td>
+                <td>
+                  <span
+                    className={`status ${
+                      req.status === "Pending"
+                        ? "pending"
+                        : req.status === "Approved"
+                          ? "approved"
+                          : req.status === "Rejected"
+                            ? "rejected"
+                            : "cancelled"
+                    }`}
+                  >
+                    {req.status}
+                  </span>
+                </td>
+                <td>
+                  {req.status === "Pending" ? (
+                    <button
+                      className="reject"
+                      onClick={() => cancelLeave(req.id)}
+                    >
+                      Cancel
+                    </button>
+                  ) : (
+                    "-"
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {/* PAGINATION */}
+        <div className="leave-pagination">
+          <button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((p) => p - 1)}
+          >
+            Prev
+          </button>
+
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i}
+              className={currentPage === i + 1 ? "active" : ""}
+              onClick={() => setCurrentPage(i + 1)}
+            >
+              {i + 1}
+            </button>
+          ))}
+
+          <button
+            disabled={currentPage === totalPages || totalPages === 0}
+            onClick={() => setCurrentPage((p) => p + 1)}
+          >
+            Next
+          </button>
+        </div>
+      </div>
+
+      {/* APPLY MODAL */}
+      {showApplyModal && (
+        <div className="modal-wrapper">
+          <div className="modal-container">
+            <button
+              className="modal-close"
+              onClick={() => setShowApplyModal(false)}
+            >
+              ✕
+            </button>
+
+            <h2>Apply for Leave</h2>
+
+            <div className="modal-row">
+              <label>Leave Type</label>
+              <select>
+                <option>Select leave type</option>
+                <option>Casual Leave</option>
+                <option>Sick Leave</option>
+                <option>Earned Leave</option>
+              </select>
+            </div>
+
+            <div className="modal-row">
+              <label>Start Date</label>
+              <input type="date" />
+            </div>
+
+            <div className="modal-row">
+              <label>End Date</label>
+              <input type="date" />
+            </div>
+
+            <div className="modal-row">
+              <label>Reason</label>
+              <textarea />
+            </div>
+
+            <div className="modal-footer">
+              <button
+                className="btn-outline"
+                onClick={() => setShowApplyModal(false)}
+              >
+                Cancel
+              </button>
+              <button className="btn-primary">Submit Request</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

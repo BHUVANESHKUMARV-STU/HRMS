@@ -1,6 +1,6 @@
 /* ===== TOPBAR ===== */
 /* ===== TOPBAR ===== */
-.topbar {
+.topbarr {
   height: 80px;
   background: #0f4c81;
   display: flex;
@@ -11,20 +11,20 @@
   /* 🔴 FIX */
   position: fixed;
   top: 0;
-  left: 240px;                    /* SAME AS SIDEBAR WIDTH */
-  width: calc(100% - 240px);      /* SAME AS SIDEBAR WIDTH */
+  left: 240px; /* SAME AS SIDEBAR WIDTH */
+  width: calc(100% - 240px); /* SAME AS SIDEBAR WIDTH */
   z-index: 1000;
 }
 
 /* LEFT */
-.topbar-left {
+.topbarr-left {
   flex: 1;
   font-size: 18px;
   font-weight: 600;
 }
 
 /* CENTER */
-.topbar-center {
+.topbarr-center {
   flex: 2;
   display: flex;
   justify-content: center;
@@ -47,7 +47,7 @@
 }
 
 /* RIGHT */
-.topbar-right {
+.topbarr-right {
   flex: 1;
   display: flex;
   align-items: center;
