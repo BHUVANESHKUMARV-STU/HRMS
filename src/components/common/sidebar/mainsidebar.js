@@ -124,15 +124,7 @@ const isPayrollActive = location.pathname.includes("/payrolll");
 
         <div className={`submenu sidebar-submenu ${showPayrollMenu ? "open" : ""}`}>
 
-          <Link
-            to="/payrolll/dashboard"
-            className={`sidebar-subitem ${
-              isActive("/payrolll/dashboard") ? "active" : ""
-            }`}
-          >
-            Dashboard
-          </Link>
-
+         
           <Link
             to="/payrolll/process"
             className={`sidebar-subitem ${
@@ -178,14 +170,7 @@ const isPayrollActive = location.pathname.includes("/payrolll");
             Reports
           </Link>
 
-          <Link
-            to="/payrolll/salarystructure"
-            className={`sidebar-subitem ${
-              isActive("/payrolll/salarystructure") ? "active" : ""
-            }`}
-          >
-            Salary structure
-          </Link>
+        
 
         </div>
 

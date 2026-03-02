@@ -6,45 +6,41 @@ import store from "./store/store";
 /* ================= LAYOUTS ================= */
 import MainLayout from "./components/layout/mainlayout";
 import HRLayout from "./HR/layout/HRLayout";
+import EmployeeMainLayout from "./employee/layout/EmployeeMainLayout";
+import AuthLayout from "./components/layout/AuthLayout";
 
 /* ================= AUTH ================= */
 import Login from "./pages/auth/login";
 import ProtectedRoute from "./pages/auth/ProtectedRoute";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
-import AuthLayout from "../src/components/layout/AuthLayout";
 
 /* ================= COMMON ================= */
 import MyProfile from "./components/MyProfile/MyProfile";
 
 /* ================= EMPLOYEE ================= */
-import EmployeeMainLayout from "./employee/layout/EmployeeMainLayout";
 import EmployeeDashboard from "./employee/dashboard/EmployeeDashboard";
 import EmployeeAttendance from "./employee/attendance/EmployeeAttendance";
-import EmployeeLeave from "./employee/leave/EmployeeLeave";
 import EmployeePayroll from "./employee/payroll/EmployeePayroll";
-
 import EmployeeProfile from "./employee/profile/EmployeeProfile";
+import EmpLeave from "./employee/leave/EmpLeave";
 
 /* ================= ADMIN ================= */
-
-/* ================= ADMIN PAYROLL MODULES ================= */
-import AdminPayrollDashboard from "./pages/payroll-admin/Dashboard/AdminPayrollDashboard";
-import AdminProcessPayroll from "./pages/payroll-admin/Process/AdminProcessPayroll";
-import AdminPayrollApprovals from "./pages/payroll-admin/Approvals/AdminPayrollApprovals";
-import AdminPayslips from "./pages/payroll-admin/Payslips/AdminPayslips";
-import AdminSalaryRelease from "./pages/payroll-admin/Release/AdminSalaryRelease";
-import AdminPayrollReports from "./pages/payroll-admin/Reports/AdminPayrollReports";
-import AdminSalaryStructure from "./pages/payroll-admin/AdminSalaryStructure";
-
-
-import AssetManagement from "./pages/AssetManagement/AssetManagement";
-import AdminExpenseFinance from "./pages/ExpenseFinance/AdminExpenseFinance";
 import EmployeeDirectory from "./pages/employees/EmployeeDirectory";
 import Attendance from "./pages/attendance/attendance";
 import LeaveList from "./pages/leave/leavelist";
 import OnboardingForm from "./pages/employees/OnboardingForm";
 import ExitFormality from "./pages/employees/exit/ExitFormalities";
+import AssetManagement from "./pages/AssetManagement/AssetManagement";
+import AdminExpenseFinance from "./pages/ExpenseFinance/AdminExpenseFinance";
+
+/* ================= ADMIN PAYROLL ================= */
+import AdminProcessPayroll from "./pages/payroll-admin/Process/AdminProcessPayroll";
+import AdminPayrollApprovals from "./pages/payroll-admin/Approvals/AdminPayrollApprovals";
+import AdminPayslips from "./pages/payroll-admin/Payslips Generator/AdminPayslipsGenerator";
+import AdminSalaryRelease from "./pages/payroll-admin/Release/AdminSalaryRelease";
+import AdminPayrollReports from "./pages/payroll-admin/Reports/AdminPayrollReports";
+import AdminSalaryStructure from "./pages/payroll-admin/AdminSalaryStructure";
 
 /* ================= HR ================= */
 import HRDashboard from "./HR/pages/Dashboard/HRDashboard";
@@ -57,6 +53,7 @@ import ExitRequests from "./HR/pages/ExitManagement/ExitRequests";
 import Payroll from "./HR/pages/Payroll/Payroll";
 import Reports from "./HR/pages/Reports/Reports";
 
+/* ================= DASHBOARD ================= */
 const Dashboard = lazy(() => import("./pages/dashboard/dashboard"));
 
 function App() {
@@ -65,31 +62,16 @@ function App() {
       <BrowserRouter>
         <Suspense fallback={<div>Loading...</div>}>
           <Routes>
-
-            {/* ============ LOGIN ============ */}
-
+            {/* ================= AUTH ================= */}
             <Route element={<AuthLayout />}>
-  <Route path="/login" element={<Login />} />
-  <Route path="/forgot-password" element={<ForgotPassword />} />
-  <Route path="/reset-password" element={<ResetPassword />} />
-</Route>
+              <Route path="/login" element={<Login />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+            </Route>
 
-<Route path="/" element={<Navigate to="/login" replace />} />
-<Route path="*" element={<Navigate to="/login" replace />} />
+            <Route path="/" element={<Navigate to="/login" replace />} />
 
-            {/* ============ ADMIN PROFILE ============ */}
-            <Route
-              path="/my-profile"
-              element={
-                <ProtectedRoute allowedRoles={["ADMIN"]}>
-                  <MainLayout>
-                    <MyProfile />
-                  </MainLayout>
-                </ProtectedRoute>
-              }
-            />
-
-            {/* ============ ADMIN ============ */}
+            {/* ================= ADMIN ================= */}
             <Route
               path="/dashboard"
               element={
@@ -156,84 +138,72 @@ function App() {
               }
             />
 
-           <Route
-  path="/payrolll/dashboard"
-  element={
-    <ProtectedRoute allowedRoles={["ADMIN"]}>
-      <MainLayout>
-        <AdminPayrollDashboard />
-      </MainLayout>
-    </ProtectedRoute>
-  }
-/>
+            {/* ===== ADMIN PAYROLL ===== */}
+            <Route
+              path="/payrolll/process"
+              element={
+                <ProtectedRoute allowedRoles={["ADMIN"]}>
+                  <MainLayout>
+                    <AdminProcessPayroll />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
 
-<Route
-  path="/payrolll/process"
-  element={
-    <ProtectedRoute allowedRoles={["ADMIN"]}>
-      <MainLayout>
-        <AdminProcessPayroll />
-      </MainLayout>
-    </ProtectedRoute>
-  }
-/>
+            <Route
+              path="/payrolll/approvals"
+              element={
+                <ProtectedRoute allowedRoles={["ADMIN"]}>
+                  <MainLayout>
+                    <AdminPayrollApprovals />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
 
-<Route
-  path="/payrolll/approvals"
-  element={
-    <ProtectedRoute allowedRoles={["ADMIN"]}>
-      <MainLayout>
-        <AdminPayrollApprovals />
-      </MainLayout>
-    </ProtectedRoute>
-  }
-/>
+            <Route
+              path="/payrolll/payslips"
+              element={
+                <ProtectedRoute allowedRoles={["ADMIN"]}>
+                  <MainLayout>
+                    <AdminPayslips />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
 
-<Route
-  path="/payrolll/payslips"
-  element={
-    <ProtectedRoute allowedRoles={["ADMIN"]}>
-      <MainLayout>
-        <AdminPayslips />
-      </MainLayout>
-    </ProtectedRoute>
-  }
-/>
+            <Route
+              path="/payrolll/release"
+              element={
+                <ProtectedRoute allowedRoles={["ADMIN"]}>
+                  <MainLayout>
+                    <AdminSalaryRelease />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
 
-<Route
-  path="/payrolll/release"
-  element={
-    <ProtectedRoute allowedRoles={["ADMIN"]}>
-      <MainLayout>
-        <AdminSalaryRelease />
-      </MainLayout>
-    </ProtectedRoute>
-  }
-/>
+            <Route
+              path="/payrolll/reports"
+              element={
+                <ProtectedRoute allowedRoles={["ADMIN"]}>
+                  <MainLayout>
+                    <AdminPayrollReports />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
 
-<Route
-  path="/payrolll/reports"
-  element={
-    <ProtectedRoute allowedRoles={["ADMIN"]}>
-      <MainLayout>
-        <AdminPayrollReports />
-      </MainLayout>
-    </ProtectedRoute>
-  }
-/>
-<Route
-  path="/payrolll/salarystructure"
-  element={
-    <ProtectedRoute allowedRoles={["ADMIN"]}>
-      <MainLayout>
-        <AdminSalaryStructure />
-      </MainLayout>
-    </ProtectedRoute>
-  }
-/>
-
-
-
+            <Route
+              path="/payrolll/salarystructure"
+              element={
+                <ProtectedRoute allowedRoles={["ADMIN"]}>
+                  <MainLayout>
+                    <AdminSalaryStructure />
+                  </MainLayout>
+                </ProtectedRoute>
+              }
+            />
 
             <Route
               path="/assets"
@@ -257,7 +227,7 @@ function App() {
               }
             />
 
-            {/* ============ HR PORTAL ============ */}
+            {/* ================= HR PORTAL ================= */}
             <Route
               path="/hr"
               element={
@@ -266,41 +236,39 @@ function App() {
                 </ProtectedRoute>
               }
             >
+              <Route index element={<Navigate to="dashboard" />} />
               <Route path="dashboard" element={<HRDashboard />} />
               <Route path="employees" element={<EmployeeListHR />} />
               <Route path="leave" element={<LeaveDashboard />} />
               <Route path="attendance" element={<AttendanceHR />} />
               <Route path="onboarding" element={<Onboarding />} />
               <Route path="exit" element={<ExitRequests />} />
+      
               <Route path="tasks" element={<TaskManagement />} />
               <Route path="payroll" element={<Payroll />} />
               <Route path="reports" element={<Reports />} />
-
-              {/* ✅ HR PROFILE (SAME PAGE, HR LAYOUT) */}
               <Route path="my-profile" element={<MyProfile />} />
             </Route>
 
-            {/* ============ FALLBACK ============ */}
-            <Route path="/" element={<Navigate to="/login" />} />
-            <Route path="*" element={<Navigate to="/login" />} />
+            {/* ================= EMPLOYEE PORTAL ================= */}
+            <Route
+              path="/employee"
+              element={
+                <ProtectedRoute allowedRoles={["EMPLOYEE"]}>
+                  <EmployeeMainLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<Navigate to="dashboard" />} />
+              <Route path="dashboard" element={<EmployeeDashboard />} />
+              <Route path="attendance" element={<EmployeeAttendance />} />
+              <Route path="leave" element={<EmpLeave />} />
+              <Route path="payroll" element={<EmployeePayroll />} />
+              <Route path="profile" element={<EmployeeProfile />} />
+            </Route>
 
-            {/* ============ EMPLOYEE PORTAL ============ */}
-<Route
-  path="/employee"
-  element={
-    <ProtectedRoute allowedRoles={["EMPLOYEE"]}>
-      <EmployeeMainLayout />
-    </ProtectedRoute>
-  }
->
-  <Route index element={<Navigate to="dashboard" />} />
-  <Route path="dashboard" element={<EmployeeDashboard />} />
-  <Route path="attendance" element={<EmployeeAttendance />} />
-  <Route path="leave" element={<EmployeeLeave />} />
-  <Route path="payroll" element={<EmployeePayroll />} />
-  <Route path="profile" element={<EmployeeProfile />} />
-</Route>
-
+            {/* ================= FALLBACK ================= */}
+            <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         </Suspense>
       </BrowserRouter>

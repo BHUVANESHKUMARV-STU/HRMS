@@ -1,13 +1,13 @@
+import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
-const ProtectedRoute = ({ allowedRoles, children }) => {
-  const userStr = localStorage.getItem("user");
+const ProtectedRoute = ({ children, allowedRoles }) => {
+  const user = useSelector((state) => state.auth.user);
 
-  if (!userStr) {
+  if (!user) {
     return <Navigate to="/login" replace />;
   }
 
-  const user = JSON.parse(userStr);
   const userRole = user.role?.toUpperCase();
 
   if (!allowedRoles.includes(userRole)) {
